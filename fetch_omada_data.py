@@ -117,7 +117,7 @@ def process_and_store_data(data, influx_writer, province_name, site_name):
             points.append(point)
 
     if points:
-        influx_writer.write(records=points, database=INFLUX_BUCKET)
+        influx_writer(records=points, database=INFLUX_BUCKET)
 
 
 def to_utc_millis(dt_local):
