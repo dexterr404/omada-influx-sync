@@ -5,6 +5,7 @@ import requests
 from datetime import datetime, timedelta, timezone
 from dotenv import load_dotenv
 from influxdb_client import InfluxDBClient, Point, WritePrecision
+import base64
 
 load_dotenv("config.env")
 
@@ -17,8 +18,15 @@ INFLUX_BUCKET = os.getenv("INFLUX_BUCKET_PAST_CONNECTIONS")
 
 TZ_OFFSET = timezone(timedelta(hours=8))  # GMT+8
 
-with open("config/provinces.json", "r") as f:
-    provinces = json.load(f)
+encoded_json = os.getenv("PROVINCES_B64")
+if not encoded_json:
+    raise ValueError("❌ Missing PROVINCES_B64 environment variable!")
+
+try:
+    decoded_json = base64.b64decode(encoded_json).decode("utf-8")
+    provinces = json.loads(decoded_json)
+except Exception as e:
+    raise ValueError(f"❌ Failed to decode PROVINCES_B64: {e}")
 
 
 def login_to_omada(base_url, email, password, creds):
