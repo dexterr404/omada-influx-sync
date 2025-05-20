@@ -4,7 +4,7 @@ import time
 import requests
 from datetime import datetime, timedelta, timezone
 from dotenv import load_dotenv
-from influxdb_client import InfluxDBClient, Point, WritePrecision
+from influxdb_client_3 import InfluxDBClient3, Point
 import base64
 
 load_dotenv("config.env")
@@ -143,11 +143,13 @@ def process_and_store_data(data, influx_writer, province_name, site_name):
         points.append(end_point)
 
     if points:
-        influx_writer.write(bucket=INFLUX_BUCKET, org=INFLUX_ORG, record=points)
+        influx_writer(bucket=INFLUX_BUCKET, record=points)
+        
 
 def to_utc_millis(dt_local):
     """Convert timezone-aware local datetime to UTC milliseconds"""
     return int(dt_local.astimezone(timezone.utc).timestamp() * 1000)
+
 
 def get_all_past_connections(province_name, creds, influx_writer):
     try:
@@ -181,12 +183,7 @@ def get_all_past_connections(province_name, creds, influx_writer):
                 time.sleep(0.5)
     except Exception as e:
         print(f"❌ Error fetching data for {province_name}: {e}")
-
-
-
-
-
-
+        
 
 if __name__ == "__main__":
     try:
