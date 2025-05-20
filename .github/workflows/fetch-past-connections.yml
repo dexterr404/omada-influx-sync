@@ -1,0 +1,35 @@
+name: Fetch Past Connections Every 5 Minutes
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'  # Every 5 minutes (UTC)
+  workflow_dispatch:
+
+jobs:
+  fetch-past-connections:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run fetch script
+        env:
+          EMAIL: ${{ secrets.EMAIL }}
+          PASSWORD: ${{ secrets.PASSWORD }}
+          INFLUX_URL: ${{ secrets.INFLUX_URL }}
+          INFLUX_TOKEN: ${{ secrets.INFLUX_TOKEN }}
+          INFLUX_ORG: ${{ secrets.INFLUX_ORG }}
+          INFLUX_BUCKET_PAST_CONNECTIONS: ${{ secrets.INFLUX_BUCKET_PAST_CONNECTIONS }}
+          PROVINCES_B64: ${{ secrets.PROVINCES_B64 }}
+        run: python fetch_omada_data.py
