@@ -82,9 +82,9 @@ def get_sites(base_url, omadac_id, access_token):
         print(f"❌ Error fetching sites: {e}")
         raise
         
-# CUSTOM TIME FILTER (&filters.timeStart={time_start}&filters.timeEnd={time_end})
+
 def fetch_past_connections(base_url, omadac_id, site_id, access_token, time_start, time_end, page):
-    url = f"{base_url}/openapi/v1/{omadac_id}/sites/{site_id}/insight/past-connection?pageSize=1000&page={page}"
+    url = f"{base_url}/openapi/v1/{omadac_id}/sites/{site_id}/insight/past-connection?pageSize=1000&page={page}&filters.timeStart={time_start}&filters.timeEnd={time_end}"
     headers = {"Authorization": f"AccessToken={access_token}"}
     try:
         response = requests.get(url, headers=headers, timeout=15)
@@ -151,10 +151,10 @@ def get_all_past_connections(province_name, creds, influx):
         access_token = get_access_token(base_url, creds, auth_code)
         sites = get_sites(base_url, creds["omadac_id"], access_token)
 
-        #now = datetime.now(TZ_OFFSET)
-        #five_minutes_ago = now - timedelta(minutes=5)
-        #time_start = to_utc_millis(five_minutes_ago)
-        #time_end = to_utc_millis(now)
+        now = datetime.now(TZ_OFFSET)
+        thirty_days_ago = now - timedelta(days=30)
+        time_start = to_utc_millis(thirty_days_ago)
+        time_end = to_utc_millis(now)
 
         for site in sites:
             site_id = site["siteId"]
@@ -162,8 +162,7 @@ def get_all_past_connections(province_name, creds, influx):
             print(f"📡 Fetching data for Site: {site_name} in Province: {province_name}...")
             page = 1
             while True:
-                #data = fetch_past_connections(base_url, creds["omadac_id"], site_id, access_token, time_start, time_end, page)
-                data = fetch_past_connections(base_url, creds["omadac_id"], site_id, access_token, page)
+                data = fetch_past_connections(base_url, creds["omadac_id"], site_id, access_token, time_start, time_end, page)
                 if not data:
                     break
                 print(f"📊 Processing page {page}...")
