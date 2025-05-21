@@ -162,7 +162,8 @@ def get_all_past_connections(province_name, creds, influx):
             print(f"📡 Fetching data for Site: {site_name} in Province: {province_name}...")
             page = 1
             while True:
-                data = fetch_past_connections(base_url, creds["omadac_id"], site_id, access_token, time_start, time_end, page)
+                #data = fetch_past_connections(base_url, creds["omadac_id"], site_id, access_token, time_start, time_end, page)
+                data = fetch_past_connections(base_url, creds["omadac_id"], site_id, access_token, page)
                 if not data:
                     break
                 print(f"📊 Processing page {page}...")
