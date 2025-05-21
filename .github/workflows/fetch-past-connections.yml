@@ -1,4 +1,4 @@
-name: Fetch Past Connections Every 5 Minutes
+name: Fetch Past Connections Every 30 Minutes
 
 on:
   schedule:
