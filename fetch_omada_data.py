@@ -152,8 +152,8 @@ def get_all_past_connections(province_name, creds, influx):
         sites = get_sites(base_url, creds["omadac_id"], access_token)
 
         now = datetime.now(TZ_OFFSET)
-        one_hour_ago = now - timedelta(hours=1)
-        time_start = to_utc_millis(one_hour_ago)
+        three_hours_ago = now - timedelta(hours=3)
+        time_start = to_utc_millis(three_hours_ago)
         time_end = to_utc_millis(now)
 
         for site in sites:
