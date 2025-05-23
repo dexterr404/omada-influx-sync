@@ -1,8 +1,8 @@
-name: Fetch Past Connections Every 30 Minutes
+name: Fetch Past Connections Every 15 Minutes
 
 on:
   schedule:
-    - cron: '*/30 * * * *' 
+    - cron: '*/15 * * * *' 
   workflow_dispatch:
 
 jobs:
